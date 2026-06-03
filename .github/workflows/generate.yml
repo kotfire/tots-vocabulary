@@ -1,0 +1,32 @@
+name: Generate Android Flutter files
+
+on:
+  workflow_dispatch:
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate Android files
+        run: flutter create . --platforms android
+
+      - name: Upload regenerated android folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-regenerated
+          path: |
+            android/**
+          retention-days: 7
